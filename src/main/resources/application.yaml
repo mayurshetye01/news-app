@@ -1,0 +1,7 @@
+server:
+  port : 9090
+
+hacker-news-base-url: https://hacker-news.firebaseio.com/v0/
+item-endpoint: item/{id}.json
+best-stories-endpoint: beststories.json
+comments-endpoint: comments.json
