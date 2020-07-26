@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 import static com.questionpro.newsapp.common.Constants.ID_KEY;
 
@@ -50,12 +49,14 @@ public abstract class AbstractItemService<T extends Item> {
 
         List<CompletableFuture<T>> completableFutures = new ArrayList<>();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(30);
+        //ExecutorService executorService = Executors.newFixedThreadPool(applicationParameters.getThreadPoolSize());
+        ForkJoinPool forkJoinPool = new ForkJoinPool(applicationParameters.getThreadPoolSize());
+
         for (String itemId : itemIds) {
-            CompletableFuture<T> completableFuture = CompletableFuture.supplyAsync(() -> get(itemId, clazz), executorService);
+            CompletableFuture<T> completableFuture = CompletableFuture.supplyAsync(() -> get(itemId, clazz), forkJoinPool);
             completableFutures.add(completableFuture);
         }
-        executorService.shutdown();
+        forkJoinPool.shutdown();
 
         CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0])).join();
 

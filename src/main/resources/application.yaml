@@ -19,6 +19,8 @@ spring:
 cache:
   eviction-time: 900000
 
+thread-pool-size: 50
+
 hacker-news-base-url: https://hacker-news.firebaseio.com/v0/
 item-endpoint: item/{id}.json
 best-stories-endpoint: beststories.json

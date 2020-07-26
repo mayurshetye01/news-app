@@ -10,7 +10,6 @@ public class ApplicationParameters {
     @Value("${hacker-news-base-url}")
     private String hackerNewsBaseURL;
 
-
     @Value("${item-endpoint}")
     private String itemEndpoint;
 
@@ -19,4 +18,8 @@ public class ApplicationParameters {
 
     @Value("${user-endpoint}")
     private String userEndpoint;
+
+    @Value("${thread-pool-size}")
+    private Integer threadPoolSize;
+
 }
