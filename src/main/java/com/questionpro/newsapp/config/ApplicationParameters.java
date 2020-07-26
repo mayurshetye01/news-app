@@ -17,6 +17,6 @@ public class ApplicationParameters {
     @Value("${best-stories-endpoint}")
     private String bestStoriesEndpoint;
 
-    @Value("${comments-endpoint}")
-    private String comments;
+    @Value("${user-endpoint}")
+    private String userEndpoint;
 }

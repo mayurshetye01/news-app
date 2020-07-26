@@ -1,7 +1,7 @@
 package com.questionpro.newsapp.rest.v1;
 
 import com.questionpro.newsapp.model.Comment;
-import com.questionpro.newsapp.services.CommentsService;
+import com.questionpro.newsapp.services.impl.CommentsTransformationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +17,11 @@ import static com.questionpro.newsapp.common.Constants.V1_API_URL;
 @RequestMapping(V1_API_URL)
 @Slf4j
 public class CommentsController {
-    private final CommentsService commentsService;
+    private final CommentsTransformationService commentsTransformationService;
 
     @Autowired
-    public CommentsController(CommentsService commentsService){
-        this.commentsService = commentsService;
+    public CommentsController(CommentsTransformationService commentsTransformationService) {
+        this.commentsTransformationService = commentsTransformationService;
     }
 
     @RequestMapping(value = "/comments/{storyId}",
@@ -30,7 +30,7 @@ public class CommentsController {
     public ResponseEntity<List<Comment>> getComments(
             @PathVariable String storyId,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
-        List<Comment> comments = commentsService.getComments(storyId);
+        List<Comment> comments = commentsTransformationService.getComments(storyId, limit);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 }

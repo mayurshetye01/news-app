@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface StoriesService {
 
+    Story get(String storyId);
+
     List<Story> getBestStories();
 
     List<Story> getPastStories();

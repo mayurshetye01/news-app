@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.net.URL;
-
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Item {
+
     private String id;
 
     @JsonProperty("by")
@@ -17,6 +16,6 @@ public class Item {
     @JsonProperty("time")
     private Long timeOfSubmission;
 
-    private URL url;
-
+    @JsonProperty(value = "kids", access = JsonProperty.Access.WRITE_ONLY)
+    private String[] comments;
 }

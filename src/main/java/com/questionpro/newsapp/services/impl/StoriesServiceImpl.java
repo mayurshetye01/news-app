@@ -1,8 +1,11 @@
 package com.questionpro.newsapp.services.impl;
 
 import com.questionpro.newsapp.config.ApplicationParameters;
+import com.questionpro.newsapp.entity.PastStory;
 import com.questionpro.newsapp.model.Story;
+import com.questionpro.newsapp.repository.PastStoriesRepository;
 import com.questionpro.newsapp.services.StoriesService;
+import com.questionpro.newsapp.util.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,17 +14,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
 public class StoriesServiceImpl extends AbstractItemService<Story> implements StoriesService {
+    private final PastStoriesRepository pastStoriesRepository;
 
-    public StoriesServiceImpl(ApplicationParameters applicationParameters, RestTemplate restTemplate) {
+    public StoriesServiceImpl(ApplicationParameters applicationParameters, RestTemplate restTemplate,
+                              PastStoriesRepository pastStoriesRepository) {
         super(applicationParameters, restTemplate);
+        this.pastStoriesRepository = pastStoriesRepository;
+    }
+
+    @Override
+    public Story get(String storyId) {
+        return get(storyId, Story.class);
     }
 
     @Override
@@ -32,39 +39,21 @@ public class StoriesServiceImpl extends AbstractItemService<Story> implements St
                 .build()
                 .toUri();
         String[] storyIds = this.restTemplate.getForObject(url, String[].class);
-        List<Story> stories = getStories(storyIds);
-
-        //TODO
-        //Add to cache
-        return stories;
-    }
-
-    private List<Story> getStories(String[] storyIds) {
-        List<Story> stories = new ArrayList<>();
-
-        List<CompletableFuture<Story>> completableFutures = new ArrayList<>();
-        ExecutorService executorService = Executors.newFixedThreadPool(20);
-        for (String storyId : storyIds) {
-            CompletableFuture<Story> completableFuture = CompletableFuture.supplyAsync(() -> get(storyId, Story.class), executorService);
-            completableFutures.add(completableFuture);
-        }
-
-        CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0])).join();
-
-        completableFutures.forEach(completableFuture -> {
-            try {
-                stories.add(completableFuture.get());
-            } catch (InterruptedException | ExecutionException e) {
-                log.error("Exception while adding future", e);
-            }
-        });
+        List<Story> stories = getItems(storyIds, Story.class);
 
         return stories;
     }
 
     @Override
     public List<Story> getPastStories() {
-        //TODO
-        return null;
+        List<Story> result = new ArrayList<>();
+        List<PastStory> pastStories = pastStoriesRepository.findAll();
+        if (pastStories == null)
+            return result;
+
+        pastStories.forEach(pastStory -> result.add(ConverterUtil.convert(pastStory)));
+
+        return result;
     }
+
 }
