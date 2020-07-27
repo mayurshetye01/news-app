@@ -1,7 +1,7 @@
 package com.questionpro.newsapp.rest.v1;
 
 import com.questionpro.newsapp.model.Comment;
-import com.questionpro.newsapp.services.impl.CommentsTransformationService;
+import com.questionpro.newsapp.services.impl.transformation.CommentsTransformationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +30,7 @@ public class CommentsController {
     public ResponseEntity<List<Comment>> getComments(
             @PathVariable String storyId,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
+        log.debug("Request to fetch comments for story id {} received", storyId);
         List<Comment> comments = commentsTransformationService.getComments(storyId, limit);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }

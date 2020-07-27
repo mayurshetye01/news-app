@@ -4,6 +4,7 @@ import com.questionpro.newsapp.config.ApplicationParameters;
 import com.questionpro.newsapp.entity.PastStory;
 import com.questionpro.newsapp.model.Story;
 import com.questionpro.newsapp.repository.PastStoriesRepository;
+import com.questionpro.newsapp.services.AbstractItemService;
 import com.questionpro.newsapp.services.StoriesService;
 import com.questionpro.newsapp.util.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +34,14 @@ public class StoriesServiceImpl extends AbstractItemService<Story> implements St
 
     @Override
     public List<Story> getBestStories() {
+        log.info("Getting best stories");
+
         URI url = UriComponentsBuilder
                 .fromHttpUrl(applicationParameters.getHackerNewsBaseURL())
                 .path(applicationParameters.getBestStoriesEndpoint())
                 .build()
                 .toUri();
+        log.debug("URL - {}", url);
         String[] storyIds = this.restTemplate.getForObject(url, String[].class);
         List<Story> stories = getItems(storyIds, Story.class);
 
@@ -46,11 +50,12 @@ public class StoriesServiceImpl extends AbstractItemService<Story> implements St
 
     @Override
     public List<Story> getPastStories() {
+        log.info("Retrieving past stories");
         List<Story> result = new ArrayList<>();
         List<PastStory> pastStories = pastStoriesRepository.findAll();
         if (pastStories == null)
             return result;
-
+        log.debug("No of entries - {}", pastStories.size());
         pastStories.forEach(pastStory -> result.add(ConverterUtil.convert(pastStory)));
 
         return result;

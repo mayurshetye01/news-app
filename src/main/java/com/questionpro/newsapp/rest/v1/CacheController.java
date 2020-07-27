@@ -25,6 +25,7 @@ public class CacheController {
             value = "/cache/content",
             method = RequestMethod.DELETE)
     public ResponseEntity clear() {
+        log.debug("Request to evict cache received");
         cacheService.evictAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }

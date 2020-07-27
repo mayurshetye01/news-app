@@ -1,4 +1,4 @@
-package com.questionpro.newsapp.services.impl;
+package com.questionpro.newsapp.services;
 
 import com.questionpro.newsapp.config.ApplicationParameters;
 import com.questionpro.newsapp.model.Item;
@@ -39,7 +39,7 @@ public abstract class AbstractItemService<T extends Item> {
         URI url = uriComponentsBuilder
                 .buildAndExpand(pathParams)
                 .toUri();
-
+        log.debug("Sending GET request for item, URL - {}", url);
         T response = restTemplate.getForObject(url, clazz);
         return response;
     }

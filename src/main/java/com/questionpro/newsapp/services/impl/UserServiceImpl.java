@@ -3,6 +3,7 @@ package com.questionpro.newsapp.services.impl;
 import com.questionpro.newsapp.config.ApplicationParameters;
 import com.questionpro.newsapp.model.User;
 import com.questionpro.newsapp.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import static com.questionpro.newsapp.common.Constants.USERNAME_KEY;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     private final RestTemplate restTemplate;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByUsername(String username) {
+        log.info("Getting user with username {}", username);
         final Map<String, String> pathParams = new HashMap<>();
         pathParams.put(USERNAME_KEY, username);
 
@@ -33,6 +36,7 @@ public class UserServiceImpl implements UserService {
                 .path(applicationParameters.getUserEndpoint())
                 .buildAndExpand(pathParams)
                 .toUri();
+        log.debug("URL - {}", url);
         User user = this.restTemplate.getForObject(url, User.class);
         return user;
     }

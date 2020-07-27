@@ -1,7 +1,7 @@
 package com.questionpro.newsapp.rest.v1;
 
 import com.questionpro.newsapp.model.Story;
-import com.questionpro.newsapp.services.impl.StoriesTransformationService;
+import com.questionpro.newsapp.services.impl.transformation.StoriesTransformationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +32,7 @@ public class StoriesController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Story>> getBestStories(
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
+        log.debug("Request to get best stories received");
         List<Story> bestStories = storiesTransformationService.getBestStories(limit);
         return new ResponseEntity<>(bestStories, HttpStatus.OK);
     }
@@ -41,6 +42,7 @@ public class StoriesController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Story>> getPastStories(
             @RequestParam(value = "limit", required = false) Integer limit) {
+        log.debug("Request to get past stories received");
         List<Story> pastStories = storiesTransformationService.getPastStories(limit);
         return new ResponseEntity<>(pastStories, HttpStatus.OK);
     }

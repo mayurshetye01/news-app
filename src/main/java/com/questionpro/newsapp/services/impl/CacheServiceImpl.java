@@ -17,6 +17,7 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void evictAll() {
         cacheManager.getCacheNames().forEach(cache -> cacheManager.getCache(cache).clear());
+        log.info("All caches evicted");
     }
 
     @Override
