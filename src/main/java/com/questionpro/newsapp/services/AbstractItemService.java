@@ -22,23 +22,21 @@ public abstract class AbstractItemService<T extends Item> {
     protected final ApplicationParameters applicationParameters;
     protected final RestTemplate restTemplate;
 
-    private final UriComponentsBuilder uriComponentsBuilder;
-
     protected AbstractItemService(ApplicationParameters applicationParameters, RestTemplate restTemplate) {
         this.applicationParameters = applicationParameters;
         this.restTemplate = restTemplate;
-        this.uriComponentsBuilder = UriComponentsBuilder
-                .fromHttpUrl(applicationParameters.getHackerNewsBaseURL())
-                .path(applicationParameters.getItemEndpoint());
     }
 
     protected T get(String id, final Class<T> clazz) {
         final Map<String, String> pathParams = new HashMap<>();
         pathParams.put(ID_KEY, id);
 
-        URI url = uriComponentsBuilder
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(applicationParameters.getHackerNewsBaseURL())
+                .path(applicationParameters.getItemEndpoint())
                 .buildAndExpand(pathParams)
                 .toUri();
+
         log.debug("Sending GET request for item, URL - {}", url);
         T response = restTemplate.getForObject(url, clazz);
         return response;
