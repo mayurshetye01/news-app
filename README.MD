@@ -20,7 +20,7 @@ Swagger API documentation can be accessed under http://localhost:9090/swagger-ui
 ------------------------------------------------------------------------------------------------
 Database
 ------------------------------------------------------------------------------------------------
-Application uses in-memory h2 database for simplicity
+Application uses in-memory h2 database for simplicity.
 The database console can be accessed under http://localhost:9090/h2-console
 
 Default username/password - admin/admin

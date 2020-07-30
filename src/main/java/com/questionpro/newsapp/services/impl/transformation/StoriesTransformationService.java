@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -52,7 +53,7 @@ public class StoriesTransformationService extends AbstractTransformationService 
     }
 
     private List<Story> rankByScore(List<Story> bestStories) {
-        Collections.sort(bestStories, (first, second) -> first.getScore().compareTo(second.getScore()) * -1);
+        Collections.sort(bestStories, Comparator.comparing(Story::getScore).reversed());
         return bestStories;
     }
 
